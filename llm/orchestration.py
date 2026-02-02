@@ -7,13 +7,15 @@ from llm.tools import TOOL_FUNCTIONS
 logger = logging.getLogger(__name__)
 
 
-def agentic_turn(messages: list, tools: list, config: ModelConfig = None) -> str | None:
+async def agentic_turn(
+    messages: list, tools: list, config: ModelConfig = None
+) -> str | None:
     """
     An agentic turn just means an AI turn + tool execution.
 
     Returns the final answer if done, None if another turn is needed.
     """
-    response = litellm_call(messages, config=config, tools=tools)
+    response = await litellm_call(messages, config=config, tools=tools)
 
     message = response.choices[0].message
     messages.append(message.dict(exclude_none=True))  # Add assistant response
@@ -43,17 +45,17 @@ def agentic_turn(messages: list, tools: list, config: ModelConfig = None) -> str
     return None  # Continue the loop
 
 
-def agentic_session(
+async def agentic_session(
     messages: list,
     tools: list = None,
     config: ModelConfig = None,
-    save_messages: bool = True,
+    do_save_messages: bool = True,
 ) -> str:
     """An agentic session here just means an agentic turn"""
     while True:
-        answer = agentic_turn(messages, tools, config)
+        answer = await agentic_turn(messages, tools, config)
         if answer is not None:
             break
 
-    save_messages(messages)
-    return answer
+    if do_save_messages:
+        save_messages(messages)

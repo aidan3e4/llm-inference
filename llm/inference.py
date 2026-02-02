@@ -3,7 +3,7 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime
 
-from litellm import completion
+from litellm import acompletion
 
 from constants import data_dir
 
@@ -22,7 +22,7 @@ class ModelConfig:
     max_tokens: int = DEFAULT_MAX_TOKENS
 
 
-def litellm_call(
+async def litellm_call(
     messages: list,
     config: ModelConfig = None,
     tools: list = None,
@@ -30,7 +30,7 @@ def litellm_call(
     if config is None:
         config = ModelConfig()
     logger.info("Starting the LLM call")
-    response = completion(
+    response = await acompletion(
         model=config.model_name,
         messages=messages,
         tools=tools,

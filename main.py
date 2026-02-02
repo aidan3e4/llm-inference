@@ -1,4 +1,5 @@
 import argparse
+import asyncio
 import logging
 
 from dotenv import load_dotenv
@@ -17,14 +18,14 @@ from llm.tools import TOOLS
 load_dotenv()
 
 
-def main(
+async def main(
     user_message: str,
     system_message: str = "You are a helpful assistant that responds to the user.",
     model_name: str = DEFAULT_MODEL_NAME,
     temperature: float = DEFAULT_TEMPERATURE,
     max_tokens: int = DEFAULT_MAX_TOKENS,
     tools: list = None,
-    save_messages: bool = True,
+    do_save_messages: bool = True,
 ) -> str:
     """Run an agentic session with the given configuration.
 
@@ -55,8 +56,8 @@ def main(
         {"role": "user", "content": user_message},
     ]
 
-    return agentic_session(
-        messages=messages, tools=tools, config=config, save_messages=save_messages
+    return await agentic_session(
+        messages=messages, tools=tools, config=config, do_save_messages=do_save_messages
     )
 
 
@@ -88,11 +89,12 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    answer = main(
-        user_message=args.message,
-        system_message=args.system,
-        model_name=args.model,
-        temperature=args.temperature,
-        max_tokens=args.max_tokens,
+    asyncio.run(
+        main(
+            user_message=args.message,
+            system_message=args.system,
+            model_name=args.model,
+            temperature=args.temperature,
+            max_tokens=args.max_tokens,
+        )
     )
-    print(f"\nReturned answer: {answer}")
