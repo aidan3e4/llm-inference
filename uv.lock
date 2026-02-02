@@ -1337,7 +1337,7 @@ wheels = [
 ]
 
 [[package]]
-name = "rag-arxiv"
+name = "llm-inference"
 version = "0.0.0"
 source = { virtual = "." }
 dependencies = [

@@ -1,4 +1,4 @@
-"""Tool definitions and implementations for the RAG system."""
+"""Tool definitions and implementations"""
 
 import inspect
 import logging

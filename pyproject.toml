@@ -1,5 +1,5 @@
 [project]
-name = "rag-arxiv"
+name = "llm-inference"
 version = "0.0.0"
 description = "Add your description here"
 readme = "README.md"
