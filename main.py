@@ -3,7 +3,7 @@ import asyncio
 import logging
 
 from logger import setup_logging
-from llm.inference import (
+from llm_inference.llm.inference import (
     DEFAULT_MAX_TOKENS,
     DEFAULT_MODEL_NAME,
     DEFAULT_TEMPERATURE,
@@ -11,7 +11,7 @@ from llm.inference import (
     InferenceConfig,
     llm_turn,
 )
-from llm.tools import TOOLS
+from llm_inference.llm.tools import TOOLS
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run an agentic LLM session")

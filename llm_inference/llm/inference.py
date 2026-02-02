@@ -6,8 +6,8 @@ import logging
 
 from litellm import acompletion
 
-from constants import data_dir
-from llm.tools import TOOL_FUNCTIONS
+from ..constants import data_dir
+from .tools import TOOL_FUNCTIONS
 
 logger = logging.getLogger(__name__)
 

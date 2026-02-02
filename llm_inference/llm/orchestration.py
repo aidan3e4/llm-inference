@@ -1,6 +1,6 @@
 import logging
 
-from llm.inference import ModelConfig, InferenceConfig
+from .inference import ModelConfig, InferenceConfig
 
 logger = logging.getLogger(__name__)
 
