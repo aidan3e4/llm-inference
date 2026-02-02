@@ -1,7 +1,8 @@
-import json
-import logging
 from dataclasses import dataclass
 from datetime import datetime
+from dotenv import load_dotenv
+import json
+import logging
 
 from litellm import acompletion
 
@@ -9,6 +10,7 @@ from constants import data_dir
 
 logger = logging.getLogger(__name__)
 
+load_dotenv()
 
 DEFAULT_MODEL_NAME = "novita/moonshotai/kimi-k2.5"
 DEFAULT_MAX_TOKENS = 262144

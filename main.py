@@ -2,8 +2,6 @@ import argparse
 import asyncio
 import logging
 
-from dotenv import load_dotenv
-
 from logger import setup_logging
 from llm.inference import (
     DEFAULT_MAX_TOKENS,
@@ -11,11 +9,8 @@ from llm.inference import (
     DEFAULT_TEMPERATURE,
     ModelConfig,
 )
-from llm.orchestration import agentic_session
+from llm.orchestration import llm_turn, InferenceConfig
 from llm.tools import TOOLS
-
-
-load_dotenv()
 
 
 async def main(
@@ -25,7 +20,6 @@ async def main(
     temperature: float = DEFAULT_TEMPERATURE,
     max_tokens: int = DEFAULT_MAX_TOKENS,
     tools: list = None,
-    do_save_messages: bool = True,
 ) -> str:
     """Run an agentic session with the given configuration.
 
@@ -45,19 +39,24 @@ async def main(
     if tools is None:
         tools = TOOLS
 
-    config = ModelConfig(
+    model_config = ModelConfig(
         model_name=model_name,
         temperature=temperature,
         max_tokens=max_tokens,
     )
+
+    inference_config = InferenceConfig()
 
     messages = [
         {"role": "system", "content": system_message},
         {"role": "user", "content": user_message},
     ]
 
-    return await agentic_session(
-        messages=messages, tools=tools, config=config, do_save_messages=do_save_messages
+    return await llm_turn(
+        messages=messages,
+        tools=tools,
+        model_config=model_config,
+        inference_config=inference_config,
     )
 
 
@@ -89,7 +88,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    asyncio.run(
+    answer = asyncio.run(
         main(
             user_message=args.message,
             system_message=args.system,
@@ -98,3 +97,4 @@ if __name__ == "__main__":
             max_tokens=args.max_tokens,
         )
     )
+    print(answer)
