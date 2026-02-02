@@ -30,10 +30,9 @@ def litellm_call(
     logger.info("LLM call succeeded")
     return response
 
+
 def save_messages(messages: list):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_path = data_dir / f"{timestamp}.json"
     output_path.write_text(json.dumps(messages, indent=2))
     logger.info(f"Conversation saved to {output_path}")
-
-

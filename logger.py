@@ -10,6 +10,7 @@ DEFAULT_LEVEL = logging.INFO
 # Get module logger (inherits config from setup_logging)
 logger = logging.getLogger(__name__)
 
+
 def setup_logging(level: int = DEFAULT_LEVEL) -> None:
     """
     Configure the root logger for the application.

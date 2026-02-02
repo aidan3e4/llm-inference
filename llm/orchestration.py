@@ -2,35 +2,25 @@ from dotenv import load_dotenv
 import json
 import logging
 
-from llm.inference import litellm_call
+from llm.inference import litellm_call, save_messages
 from logger import logger, setup_logging
-from llm.tools import TOOLS, TOOL_FUNCTIONS
+from llm.tools import TOOL_FUNCTIONS
 
 load_dotenv()
 
 setup_logging(logging.DEBUG)
 
 
-messages = [
-    {
-        "role": "system",
-        "content": "You are a helpful assistant that responds to the user.",
-    },
-    {"role": "user", "content": "what's the weather in Lausanne Switzerland today ?"},
-]
-
-
-
-
-while True:
-    response = litellm_call(messages, tools=TOOLS)
+def agentic_turn(messages: list, tools: list) -> bool:
+    """Returns whether we do another turn or no"""
+    response = litellm_call(messages, tools=tools)
 
     message = response.choices[0].message
     messages.append(message.dict(exclude_none=True))  # Add assistant response
 
     if not message.tool_calls:
         print("Final answer:", message.content)
-        break
+        return False
 
     # Execute the tool call(s)
     for tool_call in message.tool_calls:
@@ -50,6 +40,14 @@ while True:
         else:
             logger.warning(f"Unknown tool: {func_name}")
 
+    return True
+
     # Loop continues → model gets results and decides next step or final answer
 
 
+def agentic_session(messages: list, tools=None):
+    should_continue = True
+    while should_continue:
+        should_continue = agentic_turn(messages, tools)
+
+    save_messages(messages)
