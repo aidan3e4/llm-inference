@@ -1,14 +1,12 @@
-from dotenv import load_dotenv
 import json
 import logging
 
 from llm.inference import litellm_call, save_messages
-from logger import logger, setup_logging
 from llm.tools import TOOL_FUNCTIONS
 
-load_dotenv()
+logger = logging.getLogger(__name__)
 
-setup_logging(logging.DEBUG)
+
 
 
 def agentic_turn(messages: list, tools: list) -> bool:

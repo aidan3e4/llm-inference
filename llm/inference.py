@@ -1,10 +1,12 @@
 import json
+import logging
 from datetime import datetime
 
 from litellm import completion
 
 from constants import data_dir
-from logger import logger
+
+logger = logging.getLogger(__name__)
 
 
 MODEL_NAME = "novita/moonshotai/kimi-k2.5"

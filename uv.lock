@@ -1344,7 +1344,6 @@ dependencies = [
     { name = "ddgs" },
     { name = "dotenv" },
     { name = "litellm" },
-    { name = "openai" },
 ]
 
 [package.dev-dependencies]
@@ -1357,7 +1356,6 @@ requires-dist = [
     { name = "ddgs", specifier = ">=9.10.0" },
     { name = "dotenv", specifier = ">=0.9.9" },
     { name = "litellm", specifier = ">=1.81.6" },
-    { name = "openai", specifier = ">=2.16.0" },
 ]
 
 [package.metadata.requires-dev]
