@@ -15,5 +15,8 @@ dev = [
     "ruff>=0.14.14",
 ]
 
+[tool.setuptools.packages.find]
+include = ["llm_inference*"]
+
 [tool.ruff]
 line-length = 88  # default, or set to 120 if you prefer
