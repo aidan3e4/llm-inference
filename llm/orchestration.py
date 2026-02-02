@@ -1,24 +1,26 @@
 import json
 import logging
 
-from llm.inference import litellm_call, save_messages
+from llm.inference import ModelConfig, litellm_call, save_messages
 from llm.tools import TOOL_FUNCTIONS
 
 logger = logging.getLogger(__name__)
 
 
+def agentic_turn(messages: list, tools: list, config: ModelConfig = None) -> str | None:
+    """
+    An agentic turn just means an AI turn + tool execution.
 
-
-def agentic_turn(messages: list, tools: list) -> bool:
-    """Returns whether we do another turn or no"""
-    response = litellm_call(messages, tools=tools)
+    Returns the final answer if done, None if another turn is needed.
+    """
+    response = litellm_call(messages, config=config, tools=tools)
 
     message = response.choices[0].message
     messages.append(message.dict(exclude_none=True))  # Add assistant response
 
     if not message.tool_calls:
         print("Final answer:", message.content)
-        return False
+        return message.content
 
     # Execute the tool call(s)
     for tool_call in message.tool_calls:
@@ -38,14 +40,20 @@ def agentic_turn(messages: list, tools: list) -> bool:
         else:
             logger.warning(f"Unknown tool: {func_name}")
 
-    return True
-
-    # Loop continues → model gets results and decides next step or final answer
+    return None  # Continue the loop
 
 
-def agentic_session(messages: list, tools=None):
-    should_continue = True
-    while should_continue:
-        should_continue = agentic_turn(messages, tools)
+def agentic_session(
+    messages: list,
+    tools: list = None,
+    config: ModelConfig = None,
+    save_messages: bool = True,
+) -> str:
+    """An agentic session here just means an agentic turn"""
+    while True:
+        answer = agentic_turn(messages, tools, config)
+        if answer is not None:
+            break
 
     save_messages(messages)
+    return answer

@@ -1,5 +1,6 @@
 import json
 import logging
+from dataclasses import dataclass
 from datetime import datetime
 
 from litellm import completion
@@ -9,25 +10,32 @@ from constants import data_dir
 logger = logging.getLogger(__name__)
 
 
-MODEL_NAME = "novita/moonshotai/kimi-k2.5"
-MAX_TOKENS = 262144
-TEMPERATURE = 0.7
+DEFAULT_MODEL_NAME = "novita/moonshotai/kimi-k2.5"
+DEFAULT_MAX_TOKENS = 262144
+DEFAULT_TEMPERATURE = 0.7
+
+
+@dataclass
+class ModelConfig:
+    model_name: str = DEFAULT_MODEL_NAME
+    temperature: float = DEFAULT_TEMPERATURE
+    max_tokens: int = DEFAULT_MAX_TOKENS
 
 
 def litellm_call(
     messages: list,
-    model_name: str = MODEL_NAME,
+    config: ModelConfig = None,
     tools: list = None,
-    temperature: float = TEMPERATURE,
-    max_tokens: int = MAX_TOKENS,
 ):
+    if config is None:
+        config = ModelConfig()
     logger.info("Starting the LLM call")
     response = completion(
-        model=model_name,
+        model=config.model_name,
         messages=messages,
         tools=tools,
-        temperature=temperature,
-        max_tokens=max_tokens,
+        temperature=config.temperature,
+        max_tokens=config.max_tokens,
     )
     logger.info("LLM call succeeded")
     return response
