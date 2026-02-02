@@ -8,57 +8,10 @@ from llm.inference import (
     DEFAULT_MODEL_NAME,
     DEFAULT_TEMPERATURE,
     ModelConfig,
+    InferenceConfig,
+    llm_turn,
 )
-from llm.orchestration import llm_turn, InferenceConfig
 from llm.tools import TOOLS
-
-
-async def main(
-    user_message: str,
-    system_message: str = "You are a helpful assistant that responds to the user.",
-    model_name: str = DEFAULT_MODEL_NAME,
-    temperature: float = DEFAULT_TEMPERATURE,
-    max_tokens: int = DEFAULT_MAX_TOKENS,
-    tools: list = None,
-) -> str:
-    """Run an agentic session with the given configuration.
-
-    Args:
-        user_message: The user's input message (can be a string or a list for multimodal content).
-        system_message: The system prompt.
-        model_name: The model to use.
-        temperature: Sampling temperature.
-        max_tokens: Maximum tokens in response.
-        tools: List of tool definitions. Defaults to TOOLS if None.
-
-    Returns:
-        The final answer from the agent.
-    """
-    setup_logging(logging.DEBUG)
-
-    if tools is None:
-        tools = TOOLS
-
-    model_config = ModelConfig(
-        model_name=model_name,
-        temperature=temperature,
-        max_tokens=max_tokens,
-    )
-
-    inference_config = InferenceConfig()
-
-    messages = [
-        {"role": "system", "content": system_message},
-        {"role": "user", "content": user_message},
-    ]
-
-    return await llm_turn(
-        messages=messages,
-        tools=tools,
-        model_config=model_config,
-        inference_config=inference_config,
-    )
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run an agentic LLM session")
@@ -88,13 +41,26 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    setup_logging(logging.DEBUG)
+
+    messages = [
+        {"role": "system", "content": args.system},
+        {"role": "user", "content": args.message},
+    ]
+
+    model_config = ModelConfig(
+        model_name=args.model,
+        temperature=args.temperature,
+        max_tokens=args.max_tokens,
+    )
+    inference_config = InferenceConfig()
+
     answer = asyncio.run(
-        main(
-            user_message=args.message,
-            system_message=args.system,
-            model_name=args.model,
-            temperature=args.temperature,
-            max_tokens=args.max_tokens,
+        llm_turn(
+            messages=messages,
+            tools=TOOLS,
+            model_config=model_config,
+            inference_config=inference_config,
         )
     )
     print(answer)
