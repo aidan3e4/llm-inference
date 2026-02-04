@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import json
 import logging
 
-from litellm import acompletion
+from litellm import acompletion, get_max_tokens
 
 from ..constants import data_dir
 from .tools import TOOL_FUNCTIONS
@@ -47,7 +47,7 @@ async def litellm_call(
         messages=messages,
         tools=tools,
         temperature=config.temperature,
-        max_tokens=config.max_tokens,
+        max_tokens=min(get_max_tokens(config.model_name), config.max_tokens),
     )
     logger.info("LLM call succeeded")
     return response

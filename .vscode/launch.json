@@ -11,6 +11,17 @@
             "request": "launch",
             "program": "${workspaceFolder}/main.py",
             "console": "integratedTerminal"
-        }
+        } //,
+        // {
+        //     "name": "Debug pytest with full stepping (Testing explorer)",
+        //     "type": "python",
+        //     "request": "launch",
+        //     "purpose": ["debug-test"],
+        //     "justMyCode": false,
+        //     "console": "integratedTerminal"
+        //     // You can also add other useful settings, for example:
+        //     // "env": {"PYTEST_ADDOPTS": "-s --log-cli-level=INFO"},
+        //     // "args": ["--tb=long"]
+        // }
     ]
 }
